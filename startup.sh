@@ -23,8 +23,8 @@ cd /tmp
 
 echo "$(date "${DATE_FORMAT}") | Pulled Configuration"
 echo "$(date "${DATE_FORMAT}") | Extract Configuration file"
-mkdir alpha_106
-tar -C alpha_106 -xvf alpha_106.zip && mv /tmp/alpha_106/* /data/projects/$app_name/config/
+mkdir config
+tar -C config -xvf alpha_106.zip && mv /tmp/config/* /data/projects/$app_name/config/
 echo "$(date "${DATE_FORMAT}") | Extracted Configuration file"
 echo "$(date "${DATE_FORMAT}") | Check script file for get sensitive data from vault in folder config."	
 echo "$(date "${DATE_FORMAT}") | Start JMX Exporter."
