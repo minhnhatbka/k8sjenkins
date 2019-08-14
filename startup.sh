@@ -37,5 +37,5 @@ else
 	echo "$(date "${DATE_FORMAT}") | Start Application."
 	chmod +x /data/projects/$app_name/$app_name-$app_version.jar
 	cd /data/projects/$app_name
-	exec java -Xms$java_xms -Xmx$java_xmx -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=1099 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -jar /data/projects/$app_name/$app_name-$app_version.jar
+	exec java -jar /data/projects/$app_name/$app_name-$app_version.jar
 fi
