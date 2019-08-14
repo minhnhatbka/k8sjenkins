@@ -9,33 +9,26 @@ echo "Hello from nhattm2"
 echo "Current environment is" $env_name
 echo "Current application name is" $app_name
 
+exec sh /usr/script/mc config host add minio http://192.168.50.11:31991 myaccesskey mysecretkey
+echo "mc done"
+
 app_version=$(cat /image_info/app_version)
 git_revision=$(cat /image_info/git_revision)
 config_url="http://192.168.50.11:31991/minio"
 
 echo "$(date "${DATE_FORMAT}") | Pulling Configuration"
 cd /tmp
-#response_http=$(wget --server-response ${config_url}/${app_name}-${app_version}.zip 2>&1 | awk '/^  HTTP/{print $2}')
-response_http=$(wget --server-response http://192.168.50.11:31991/minio/alpha_106.zip 2>&1 | awk '/^  HTTP/{print $2}')
-echo "$(date "${DATE_FORMAT}") | Http status when pulling configuration is ${response_http}"
-if [[ ${response_http} != 200 ]]; then
-	echo "$(date "${DATE_FORMAT}") | Failed : Cannot pull configure"
-	sleep 2s
-	exit 1
-else
-	echo "$(date "${DATE_FORMAT}") | Pulled Configuration"
-	echo "$(date "${DATE_FORMAT}") | Extract Configuration file"
-	#tar -zxvf $app_name-$app_version.zip && mv /tmp/$app_name-$app_version/* /data/projects/$app_name/config/
-	tar -zxvf alpha_106.zip && mv /tmp/alpha_106/* /data/projects/$app_name/config/
-	echo "$(date "${DATE_FORMAT}") | Extracted Configuration file"
-	echo "$(date "${DATE_FORMAT}") | Check script file for get sensitive data from vault in folder config."	
 
-	echo "$(date "${DATE_FORMAT}") | Start JMX Exporter."
+exec sh /usr/script/mc cp minio/$env_name/alpha_106.zip .
 
-	chown -R root:root /data/projects/$app_name/config
-
-	echo "$(date "${DATE_FORMAT}") | Start Application."
-	chmod +x /data/projects/$app_name/$app_name-$app_version.jar
-	cd /data/projects/$app_name
-	exec java -jar /data/projects/$app_name/$app_name-$app_version.jar
-fi
+echo "$(date "${DATE_FORMAT}") | Pulled Configuration"
+echo "$(date "${DATE_FORMAT}") | Extract Configuration file"
+tar -zxvf alpha_106.zip && mv /tmp/alpha_106/* /data/projects/$app_name/config/
+echo "$(date "${DATE_FORMAT}") | Extracted Configuration file"
+echo "$(date "${DATE_FORMAT}") | Check script file for get sensitive data from vault in folder config."	
+echo "$(date "${DATE_FORMAT}") | Start JMX Exporter."
+chown -R root:root /data/projects/$app_name/config
+echo "$(date "${DATE_FORMAT}") | Start Application."
+chmod +x /data/projects/$app_name/$app_name-$app_version.jar
+cd /data/projects/$app_name
+exec java -jar /data/projects/$app_name/$app_name-$app_version.jar
