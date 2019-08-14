@@ -21,5 +21,5 @@ RUN mkdir -p /usr/script
 COPY ./startup.sh /usr/script
 RUN chmod 755 /usr/script/startup.sh
 
-CMD ["/usr/script/startup.sh"]
+CMD ["sh","/usr/script/startup.sh"]
 

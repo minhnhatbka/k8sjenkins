@@ -1,10 +1,11 @@
-#!/bin/bash
+#/bin/bash
 
 # Add Docker Host Info
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
 DATE_FORMAT="+%Y-%m-%d %H:%M:%S"
 
+echo "Hello from nhattm2"
 echo "Current environment is" $env_name
 echo "Current application name is" $app_name
 echo "Current country code is" $country_code
@@ -17,7 +18,8 @@ config_url="http://192.168.50.11:31991/minio"
 
 echo "$(date "${DATE_FORMAT}") | Pulling Configuration"
 cd /tmp
-response_http=$(wget --server-response ${config_url}/${app_name}-${app_version}.zip 2>&1 | awk '/^  HTTP/{print $2}')
+#response_http=$(wget --server-response ${config_url}/${app_name}-${app_version}.zip 2>&1 | awk '/^  HTTP/{print $2}')
+response_http=$(wget --server-response ${config_url}/alpha_104.zip 2>&1 | awk '/^  HTTP/{print $2}')
 echo "$(date "${DATE_FORMAT}") | Http status when pulling configuration is ${response_http}"
 if [[ ${response_http} != 200 ]]; then
 	echo "$(date "${DATE_FORMAT}") | Failed : Cannot pull configure"
