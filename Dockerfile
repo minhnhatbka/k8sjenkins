@@ -5,7 +5,12 @@ RUN mkdir -p /image_info
 RUN echo "#app_version#" > /image_info/app_version && echo "#git_revision#" > /image_info/git_revision
 
 RUN mkdir -p /data/logs/#app_name# && mkdir -p /data/projects/#app_name#/config
-RUN useradd appservice -d /data/projects/#app_name# -s /sbin/nologin
+
+RUN addgroup -S appservice && adduser -S appservice -G appservice
+
+#RUN useradd appservice -d /data/projects/#app_name# -s /sbin/nologin
+
+
 RUN chmod 775 /data/logs /data/projects
 RUN chown -R appservice:appservice /data/projects
 
