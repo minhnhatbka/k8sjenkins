@@ -19,6 +19,8 @@ COPY ./target/#app_name#-#app_version#.jar /data/projects/#app_name#
 
 RUN mkdir -p /usr/script
 COPY ./startup.sh /usr/script
+COPY ./mc /usr/script
+RUN chmod 755 /usr/script/mc
 RUN chmod 755 /usr/script/startup.sh
 
 CMD ["sh","/usr/script/startup.sh"]
