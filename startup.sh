@@ -8,6 +8,7 @@ DATE_FORMAT="+%Y-%m-%d %H:%M:%S"
 echo "Hello from nhattm2"
 echo "Current environment is" $env_name
 echo "Current application name is" $app_name
+echo "BUILD ID" $BUILD_NUMBER
 
 /usr/script/mc config host add minio http://192.168.50.11:31991 myaccesskey mysecretkey
 echo "mc done"
@@ -19,12 +20,12 @@ config_url="http://192.168.50.11:31991/minio"
 echo "$(date "${DATE_FORMAT}") | Pulling Configuration"
 cd /tmp
 
-/usr/script/mc cp minio/$env_name/alpha_106.zip .
+/usr/script/mc cp minio/$env_name/${env_name}_${BUILD_NUMBER}.zip .
 
 echo "$(date "${DATE_FORMAT}") | Pulled Configuration"
 echo "$(date "${DATE_FORMAT}") | Extract Configuration file"
 mkdir config
-tar -C config -xvf alpha_106.zip && mv /tmp/config/* /data/projects/$app_name/config/
+tar -C config -xvf ${env_name}_${BUILD_NUMBER}.zip  && mv /tmp/config/* /data/projects/$app_name/config/
 echo "$(date "${DATE_FORMAT}") | Extracted Configuration file"
 echo "$(date "${DATE_FORMAT}") | Check script file for get sensitive data from vault in folder config."	
 echo "$(date "${DATE_FORMAT}") | Start JMX Exporter."
