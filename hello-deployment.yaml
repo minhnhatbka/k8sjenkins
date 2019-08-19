@@ -14,16 +14,16 @@ spec:
     spec:
       containers:
         - name: hello
-          image: 192.168.50.11/hello/hello:3
+          image: #IMAGE#
           imagePullPolicy: Always
           ports:
             - containerPort: 9080
           env:
           - name: env_name
-            value: "alpha"
+            value: "#env_name#"
           - name: app_name
-            value: "demo"
+            value: "#app_name#"
           - name: BUILD_NUMBER
-            value: "3"
+            value: "#BUILD_NUMBER#"
       imagePullSecrets:
         - name: cfcr

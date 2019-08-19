@@ -3,6 +3,7 @@ def env_version = "alpha"
 def config = "k8sconfig"
 def file_name = env_version + "_" + BUILD_NUMBER
 def app_name = "demo"
+def registry_url = "192.168.50.11"
 def app_version = "0.0.1-SNAPSHOT"
 def git_revision = "blobla"
 def branch = ""
@@ -14,16 +15,6 @@ if (env_version == "alpha") {
 
 pipeline {
     agent any
-    
-//     environment {
-//         // image = ""
-//         // config = "k8sconfig"
-//         // file_name = env_version + "_" + BUILD_NUMBER
-//         env_version = "alpha"
-//         app_name = "demo"
-//         app_version = "0.0.1-SNAPSHOT"
-//         git_revision = "blobla"
-//   }
     
     stages {
         stage('Fetch from github') {
@@ -80,7 +71,7 @@ pipeline {
                         sh "cp startup.sh ../${app_name}"
                         sh "cp Dockerfile ../${app_name}"
                         sh "cp mc ../${app_name}"
-                        image = docker.build("192.168.50.11/hello/hello:$BUILD_NUMBER", "../${app_name}")
+                        image = docker.build("${registry_url}/hello/hello:$BUILD_NUMBER", "../${app_name}")
                     }
                 }
             }
@@ -88,14 +79,22 @@ pipeline {
         stage('Push harbor') {
             steps {
                 script {
-                    sh "docker login 192.168.50.11 -u nhattm2 -p N123123a@"
+                    sh "docker login ${registry_url} -u nhattm2 -p N123123a@"
                     image.push()
                 }
             }
         }
-        stage('Deploy') {
+        stage('Deploy k8s') {
             steps {
-                sh "docker run -d -p 9080:8080 -e env_name=${env_version} -e app_name=${app_name}  -e BUILD_NUMBER=$BUILD_NUMBER     192.168.50.11/hello/hello:$BUILD_NUMBER"
+                dir('k8sjenkins') {
+                    script {
+                        sh "sed -i 's/#IMAGE#/${registry_url}/hello/hello:$BUILD_NUMBER/g' hello-deployment.yaml"
+                        sh "sed -i 's/#env_name#/${env_version}/g' hello-deployment.yaml"
+                        sh "sed -i 's/#app_name#/${app_name}/g' hello-deployment.yaml"
+                        sh "sed -i 's/#BUILD_NUMBER#/$BUILD_NUMBER/g' hello-deployment.yaml"
+                        sh "kubectl apply -f hello-deployment.yaml"
+                    }
+                }
             }
         }
     }
