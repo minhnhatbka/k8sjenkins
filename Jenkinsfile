@@ -88,7 +88,7 @@ pipeline {
             steps {
                 dir('k8sjenkins') {
                     script {
-                        sh "sed -i 's/#IMAGE#/${registry_url}/hello/hello:$BUILD_NUMBER/g' hello-deployment.yaml"
+                        sh "sed -i 's|#IMAGE#|${registry_url}/hello/hello:$BUILD_NUMBER|g' hello-deployment.yaml"
                         sh "sed -i 's/#env_name#/${env_version}/g' hello-deployment.yaml"
                         sh "sed -i 's/#app_name#/${app_name}/g' hello-deployment.yaml"
                         sh "sed -i 's/#BUILD_NUMBER#/$BUILD_NUMBER/g' hello-deployment.yaml"
