@@ -20,7 +20,7 @@ pipeline {
         stage('Fetch from github') {
             steps {
                 script {
-                    // sh "rm -rf *"
+                    sh "rm -rf *"
                     def mcExisted = fileExists 'k8sjenkins'
                     if (!mcExisted) {
                         sh "mkdir k8sjenkins"

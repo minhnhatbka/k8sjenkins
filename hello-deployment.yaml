@@ -27,3 +27,21 @@ spec:
             value: "#BUILD_NUMBER#"
       imagePullSecrets:
         - name: cfcr
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hello-service
+spec:
+  selector:
+    app: hello
+  ports:
+    - protocol: TCP
+      port: 9080
+      targetPort: 9080
+  loadBalancerIP: 192.168.50.11
+  type: LoadBalancer
+status:
+  loadBalancer:
+    ingress:
+      - ip: 192.168.50.11
