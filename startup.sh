@@ -10,12 +10,12 @@ echo "Current environment is" $env_name
 echo "Current application name is" $app_name
 echo "BUILD ID" $BUILD_NUMBER
 
-/usr/script/mc config host add minio http://192.168.50.11:31991 myaccesskey mysecretkey
+/usr/script/mc config host add minio http://10.58.244.249:9000 myaccesskey mysecretkey
 echo "mc done"
 
 app_version=$(cat /image_info/app_version)
 git_revision=$(cat /image_info/git_revision)
-config_url="http://192.168.50.11:31991/minio"
+config_url="http://10.58.244.249:9000/minio"
 
 echo "$(date "${DATE_FORMAT}") | Pulling Configuration"
 cd /tmp
