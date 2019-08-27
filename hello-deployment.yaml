@@ -17,7 +17,7 @@ spec:
           image: #IMAGE#
           imagePullPolicy: Always
           ports:
-            - containerPort: 9080
+            - containerPort: 8080
           env:
           - name: env_name
             value: "#env_name#"

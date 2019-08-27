@@ -3,7 +3,7 @@ def env_version = "alpha"
 def config = "k8sconfig"
 def file_name = env_version + "_" + BUILD_NUMBER
 def app_name = "demo"
-def registry_url = "10.58.244.249"
+def registry_url = "10.58.244.249:9443"
 def app_version = "0.0.1-SNAPSHOT"
 def git_revision = "blobla"
 def branch = ""
@@ -57,6 +57,8 @@ pipeline {
         stage('Maven build') {
             steps {
                 dir("${app_name}") {
+                    sh 'which mvn'
+                    sh 'mvn -version'
                     sh 'mvn -B -DskipTests clean package' 
                 }
             }
