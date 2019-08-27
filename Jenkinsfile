@@ -95,6 +95,8 @@ pipeline {
                         sh "sed -i 's/#app_name#/${app_name}/g' hello-deployment.yaml"
                         sh "sed -i 's/#BUILD_NUMBER#/$BUILD_NUMBER/g' hello-deployment.yaml"
                         sh "kubectl apply -f hello-deployment.yaml"
+                        sh "kubectl delete svc hello-ext"
+                        sh "kubectl expose deployment hello --type=LoadBalancer --external-ip=10.58.244.249  --name=hello-ext"
                     }
                 }
             }
