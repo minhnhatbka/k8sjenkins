@@ -19,5 +19,12 @@ then
 else
 	cat flyway.log ;
         echo "nok";
+	echo "rollback :( ";
+	rm  k8sjenkins/flyway/sql/* ;
+	cp -R db/alpha/demo/rollback/* k8sjenkins/flyway/sql/ ;
+	./k8sjenkins/flyway/flyway repair ;
+	./k8sjenkins/flyway/flyway migrate &> rollback_flyway.log ;
+	echo "rollback log" ;
+	cat rollback_flyway.log	;
         exit 1
 fi
