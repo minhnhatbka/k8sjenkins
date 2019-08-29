@@ -72,9 +72,10 @@ pipeline {
         stage('Sonarqube') {
             steps {
                 dir('k8sjenkins') {
-                    sh "unzip -qq sonar.zip -d .. "
+                    script {
+                        sh "./sonar.sh ${env_version} ${app_name}"
+                    }
                 }
-                sh "sonar/bin/sonar-scanner -Dsonar.projectKey=hello -Dsonar.sources=demo -Dsonar.host.url=http://10.58.244.249:9100 -Dsonar.login=7755d9298fc0967bce54399fd4715e0f31b6808c -Dsonar.projectBaseDir=. -Dsonar.language=java -Dsonar.java.binaries=demo/target/classes"
             }
         }
         stage('Docker build') {
