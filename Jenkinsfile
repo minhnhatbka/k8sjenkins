@@ -39,6 +39,12 @@ pipeline {
                     dir('k8sconfig') {
                         git 'https://github.com/minhnhatbka/k8sconfig.git'
                     }
+                    
+                    sh "rm -rf db"
+                    sh "mkdir db"
+                    dir('db') {
+                        git 'https://github.com/minhnhatbka/db-migration-script.git'
+                    }
                 }
             }
         }
@@ -61,6 +67,14 @@ pipeline {
                     sh 'mvn -version'
                     sh 'mvn -B -DskipTests clean package' 
                 }
+            }
+        }
+        stage('Sonarqube') {
+            steps {
+                dir('k8sjenkins') {
+                    sh "unzip -qq sonar.zip -d .. "
+                }
+                sh "sonar/bin/sonar-scanner -Dsonar.projectKey=hello -Dsonar.sources=demo -Dsonar.host.url=http://10.58.244.249:9100 -Dsonar.login=7755d9298fc0967bce54399fd4715e0f31b6808c -Dsonar.projectBaseDir=. -Dsonar.language=java -Dsonar.java.binaries=demo/target/classes"
             }
         }
         stage('Docker build') {
@@ -86,6 +100,17 @@ pipeline {
                 }
             }
         }
+        
+        stage('SQL migration') {
+            steps {
+                dir('k8sjenkins') {
+                    script {
+                        sh "./sqlmigrate.sh ${env_version} ${app_name}"
+                    }
+                }
+            }
+        }
+        
         stage('Deploy k8s') {
             steps {
                 dir('k8sjenkins') {
